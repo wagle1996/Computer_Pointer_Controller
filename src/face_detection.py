@@ -18,26 +18,31 @@ class FaceDetect(Model):
         self.input_shape=self.model.inputs[self.input_name].shape
         self.output_name=next(iter(self.model.outputs))
         self.output_shape=self.model.outputs[self.output_name].shape
+    
+
     def predict(self, image, prob_threshold):
         '''
         This method is meant for running predictions on the input image.
         '''
-        img_processed = self.preprocess_input(image.copy())
-        outputs = self.network.infer({self.input_name:img_processed})
-        coords = self.preprocess_output(outputs, prob_threshold)
-        if (len(coords)==0):
+        input_img = self.preprocess_input(image)  #preprocess input from model_reuse
+        self.outputs = self.network.infer({self.input_name:input_img})
+        face_coords = self.preprocess_output(self.outputs, prob_threshold)
+        if (len(face_coords)==0):
             return 0, 0
-        coords = coords[0] #take the first detected face
-        h=image.shape[0]
-        w=image.shape[1]
-        coords = coords* np.array([w, h, w, h])
-        coords = coords.astype(np.int32)
-        
-        cropped_face = image[coords[1]:coords[3], coords[0]:coords[2]]
-        return cropped_face, coords
+        #face_coords = face_coords[0] # Taking first face
+        height=image.shape[0]
+        width=image.shape[1]
+        for coords in face_coords:
+            coords = coords* np.array([width, height, width, height])
+            coords = coords.astype(np.int32)
+            cropped_face = image[coords[1]:coords[3], coords[0]:coords[2]]
+
+        #cropped_face = image[face_coords[1]:face_coords[3], face_coords[0]:face_coords[2]]   #cropping the face area
+        return cropped_face, face_coords
+
 
     def check_model(self):
-        ''
+        pass
 
     def preprocess_output(self, outputs, prob_threshold):
         '''
@@ -46,18 +51,18 @@ class FaceDetect(Model):
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        try:
-            coords =[]
-            outs = outputs[self.output_name][0][0]
-            for out in outs:
-                conf = out[2]
-                if conf>prob_threshold:
-                    x_min=out[3]
-                y_min=out[4]
-                x_max=out[5]
-                y_max=out[6]
-                coords.append([x_min,y_min,x_max,y_max])
-        except Exception as e:
-            log.error("could not preprocess output")
-        return coords
 
+        #preprocessing_output  Adapted from https://github.com/Rahul24-06/Computer-pointer-Controller-using-Gaze-Estimation/blob/master/src/facial_landmarks_detection.py
+        try:
+            face =[]
+            output = outputs[self.output_name][0][0]
+            for obj in output:
+                if obj[2]>prob_threshold:
+                    x_min=obj[3]
+                    y_min=obj[4]
+                    x_max=obj[5]
+                    y_max=obj[6]
+                    face.append([x_min,y_min,x_max,y_max])
+        except Exception as e:
+            log.error("Error While preprocessing output for facial detection model" + str(e))  
+        return face   
