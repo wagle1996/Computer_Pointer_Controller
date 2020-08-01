@@ -54,7 +54,7 @@ def build_argparser():
 
     return parser
 def view_eye_rectangle(eyes_coords, eye_buffer,frame):     #idea adapted from https://github.com/yas-sim/gaze-estimation-with-laser-sparking/blob/master/gaze-estimation.py
-    le_xmin,le_ymin = (eyes_coords[0][0]-eye_buffer, eyes_coords[0m][1]-eye_buffer)
+    le_xmin,le_ymin = (eyes_coords[0][0]-eye_buffer, eyes_coords[0][1]-eye_buffer)
     le_xmax,le_ymax = (eyes_coords[0][2]+eye_buffer, eyes_coords[0][3]+eye_buffer) 
 
     re_xmin,re_ymin = (eyes_coords[1][0]-eye_buffer, eyes_coords[1][1]-eye_buffer)
