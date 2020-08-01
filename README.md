@@ -128,7 +128,7 @@ python3 main.py -fd ../intel/face-detection-adas-binary-0001/FP32-INT1/face-dete
 After you run the command you will get the following result <BR>
 Click on the picture below to see the demo video
 
-[![Demo video](https://i9.ytimg.com/vi/9O4Z9yyVdzQ/mq2.jpg?sqp=CIyt8PgF&rs=AOn4CLAmNtZOwUr1BS1sJtkdLRbplHdFGA)](https://youtu.be/9O4Z9yyVdzQ)
+[![Demo video](https://i9.ytimg.com/vi/N85XMrJvIAc/mq2.jpg?sqp=CPSslPkF&rs=AOn4CLCPFyaCYNIapiFH2VdyWIAcZQdA7g)](https://www.youtube.com/watch?v=N85XMrJvIAc)
 
 ## Documentation
 ```
